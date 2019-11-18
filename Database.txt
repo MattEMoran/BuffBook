@@ -1,0 +1,5 @@
+Username|Password|Post 1 Title ~ Post 1 Text ~ Post 1 Timestamp|
+
+
+Admin|ZxyW9!l3|Test~Beep Boop Bop~00:00:00:00|
+BuffBookOfficial|Ralphie|Welcome to Buff Book!~Enjoy connecting to your friends!~00:00:00:01|
