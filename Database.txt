@@ -1,5 +1,7 @@
-Username|Password|Post 1 Title ~ Post 1 Text ~ Post 1 Timestamp|
+Username|Password|Friend 1, Friend 2, Friend 3,...|Post 1 ~ Post 1 Likes ~ Post 1 Timestamp ~ Post 1 Comments|
 
 
-Admin|ZxyW9!l3|Test~Beep Boop Bop~00:00:00:00|
-BuffBookOfficial|Ralphie|Welcome to Buff Book!~Enjoy connecting to your friends!~00:00:00:01|
+BuffBookOfficial|Sk0BuFfS|RalphieOfficial|Welcome to Buff Book!~34~00:00:00:00~Comments have been disabled.|
+RalphieOfficial|r@lphieRun|BuffBookOfficial|Ralphie V has retired.~567~45:32:05:56~Have fun in retirement!|
+Eugene19|ro3eN2V|RalphieOfficial,BuffBookOfficial|
+
