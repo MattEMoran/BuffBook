@@ -1,7 +1,18 @@
-Username|Password|Friend 1, Friend 2, Friend 3,...|Post 1 ~ Post 1 Likes ~ Post 1 Timestamp ~ Post 1 Comments|
+Username|Password|Friend 1, Friend 2, Friend 3,...|Post 1 ~ Post 1 Likes ~ Post 1 Timestamp ~ Post 1 Comments ~ Post 2...|
 
+A * symbol means that thing is empty, usually for friends list. Comments are seperated by commas.
 
 BuffBookOfficial|Sk0BuFfS|RalphieOfficial|Welcome to Buff Book!~34~00:00:00:00~Comments have been disabled.|
 RalphieOfficial|r@lphieRun|BuffBookOfficial|Ralphie V has retired.~567~45:32:05:56~Have fun in retirement!|
-Eugene19|ro3eN2V|RalphieOfficial,BuffBookOfficial|
+Eugene19|ro3eN2V|RalphieOfficial,BuffBookOfficial,RigZay|*|
+RigZay|rue0iw|Eugene19,RalphieOfficial|*|
+BippityBoopBop|2k2k39d|RigZay|What do you give to a sick lemon? Lemon aid!~104~34:22:19:01~Where did the computer go dancing? The disc-o!~43~35:35:09:08|
+DaCenterTable|skrt97e|Eugue19,RigZay|*|
+ElonMusk|muskr@t|*|What if I accidently broke the window on the new Tesla Cybertruck? Ahaha no...unless...?~4385~56:00:00:35~This truck will run so well on low graphics,Where are the side mirrors though?|
+ZarkMuckerburg|iNoURpsswrd!|ElonMusk,BippityBoopBop|*|
+BillieEyelash|sHEsbrOKen|BippityBoopBop|*|
+BbyYda|cVtE!Iam$|*|*|
+BoppityBeepBip|j48ednj2O|BbyYda|Y'all pour the cereal before or after you put water in the bowl?~57~23:29:02:45~:(~OMG that last season of Game of Thrones was so good!~0~78:56:33:21~Comments have been disabled.|
+Fortnight|3o28fh2E0|ElonMusk,DaCenterTable,RigZay|Did you know there are 14 days in a fortnight?~193~78:21:59:34~Wow I did not know this.|
+
 

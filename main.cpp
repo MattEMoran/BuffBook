@@ -2,10 +2,12 @@
 #include <stack>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
-struct user {
+struct user
+{
  string username;
  string password;
  vector<post> stream;
@@ -29,6 +31,7 @@ struct post{
 }
 
 class BuffBook{
+  //Hash of usernames and passwords?
   private:
   BuffBook(string filename){
     generateNetwork(filename);
@@ -74,6 +77,10 @@ class BuffBook{
 
   void generateNetwork(string filename){
     //Generate network of users and posts
+  }
+
+  void login{
+    //Enter a valid username and password
   }
 }
 
