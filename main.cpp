@@ -41,16 +41,24 @@ class BuffBook{
     //Display 10 most recent posts from all friends
   }
 
-  void addFriend(){
+  void addFriend(string username){
     //Add friend for current user
   }
 
-  void removeFriend(){
+  void removeFriend(string username){
     //Remove friend from current user's friend list
   }
 
   void writePost(){
     //Create post for current user
+    cin.clear();
+    cin.ignore();
+    string postText;
+    cout<<"Write your post here: ";
+    cin<<postText;
+    string tm = "";
+    Post p(postText,0,tm);
+    user.stream.push_back(p);
   }
 
   void listFriends(){
