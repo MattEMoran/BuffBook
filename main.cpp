@@ -31,7 +31,7 @@ struct post{
 }
 
 class BuffBook{
-  //Hash of usernames and passwords?
+  vector<user> users;
   private:
   BuffBook(string filename){
     generateNetwork(filename);
