@@ -19,6 +19,11 @@ struct post{
   }
 };
 
+struct Friend
+{
+  user *u;
+}
+
 class User
 {
  string username;
@@ -46,6 +51,17 @@ class BuffBook{
 
   void addFriend(string username){
     //Add friend for current user
+    /*for (int i = 0; i < users.size(); i++){
+      if (users[i].username == curruser.username){
+        for (int j = 0; j < users.size(); j++){
+          if(users[j].username == username){
+            Friend temp;
+            temp.u = &users[j];
+            users[i].friends.push_back(temp);
+          }
+        }
+      }
+    }*/
   }
 
   void removeFriend(string username){
@@ -54,23 +70,23 @@ class BuffBook{
 
   void writePost(){
     //Create post for current user
-    cin.clear();
+    /*cin.clear();
     cin.ignore();
     string postText;
     cout<<"Write your post here: ";
     cin>>postText;
     string tm = "";
     post p(postText,0,tm);
-    curruser.stream.push(p);
+    curruser.stream.push(p);*/
   }
 
   void listFriends(){
     //List current user's friends
-    cout<<"Friends: ";
+    /*cout<<"Friends: ";
     for(int i = 0; i < curruser.friends.size();i++){
       cout<<curruser.friends[i].username<<" ";
     }
-    cout<<endl;
+    cout<<endl;*/
   }
 
   void commentOnPost(){
@@ -89,14 +105,14 @@ class BuffBook{
 
   void listNetwork(){
     //List all users and their friends
-    for(int i = 0; i < users.size(); i++){
+    /*for(int i = 0; i < users.size(); i++){
       cout<<"User: "<<users[i].username<<endl;
       cout<<"   Friends: ";
       for(int j = 0; j < users[i].friends.size; j++){
         cout<<users[i].friends[j].username<<" ";
       }
       cout<<endl;
-    }
+    }*/
   }
 
   void generateNetwork(string filename){
