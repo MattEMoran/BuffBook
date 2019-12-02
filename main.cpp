@@ -23,8 +23,8 @@ class User
 {
  string username;
  string password;
- vector<post> stream;
- vector<User> friends;
+ stack <post> stream;
+ vector <User> friends;
  User(string name, string password){
    username = name;
    password = password;
@@ -61,11 +61,16 @@ class BuffBook{
     cin>>postText;
     string tm = "";
     post p(postText,0,tm);
-    user.stream.push_back(p);
+    curruser.stream.push(p);
   }
 
   void listFriends(){
     //List current user's friends
+    cout<<"Friends: ";
+    for(int i = 0; i < curruser.friends.size();i++){
+      cout<<curruser.friends[i].username<<" ";
+    }
+    cout<<endl;
   }
 
   void commentOnPost(){
@@ -84,6 +89,14 @@ class BuffBook{
 
   void listNetwork(){
     //List all users and their friends
+    for(int i = 0; i < users.size(); i++){
+      cout<<"User: "<<users[i].username<<endl;
+      cout<<"   Friends: ";
+      for(int j = 0; j < users[i].friends.size; j++){
+        cout<<users[i].friends[j].username<<" ";
+      }
+      cout<<endl;
+    }
   }
 
   void generateNetwork(string filename){
