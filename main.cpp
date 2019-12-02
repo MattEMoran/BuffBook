@@ -29,7 +29,7 @@ class User
  string username;
  string password;
  stack <post> stream;
- vector <User> friends;
+ vector <Friend> friends;
  User(string name, string password){
    username = name;
    password = password;
@@ -66,6 +66,16 @@ class BuffBook{
 
   void removeFriend(string username){
     //Remove friend from current user's friend list
+    for (int i = 0; i < users.size(); i++){
+      if (users[i].username == curruser.username){
+        for (int j = 0; j < users[i].friends.size(); j++){
+          if(users[i].friends.username == username){
+            Friend temp;
+            temp = users[i].
+          }
+        }
+      }
+    }
   }
 
   void writePost(){
