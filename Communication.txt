@@ -1,0 +1,6 @@
+Howdy ho
+
+http://www.cplusplus.com/reference/ctime/localtime/
+check this link out
+it will be useful because we still need to use timestamps for the time of each post anyways and when we create a new one, we will need to find the current time to add it to it correctly
+so instead of using a string to keep the time, we could just keep the phat long digit that time.h gives us and be able to work with it using the t

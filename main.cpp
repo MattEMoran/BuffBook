@@ -6,32 +6,35 @@
 
 using namespace std;
 
-struct user
-{
- string username;
- string password;
- vector<post> stream;
- vector<user> friends;
- user(string name, string password){
-   username = name;
-   password = password;
- }
-}
-
 struct post{
   string title;
   int likes;
   string timestamp;
   vector<string> comments;
-  post(string t, int l, string tm){
+  post(string t, int l, string tm)
+  {
     title = t;
     l = likes;
     timestamp = tm;
   }
-}
+};
+
+class User
+{
+ string username;
+ string password;
+ vector<post> stream;
+ vector<User> friends;
+ User(string name, string password){
+   username = name;
+   password = password;
+ }
+ 
+};
 
 class BuffBook{
-  vector<user> users;
+  vector<User> users;
+  User *curruser;
   private:
   BuffBook(string filename){
     generateNetwork(filename);
@@ -55,9 +58,9 @@ class BuffBook{
     cin.ignore();
     string postText;
     cout<<"Write your post here: ";
-    cin<<postText;
+    cin>>postText;
     string tm = "";
-    Post p(postText,0,tm);
+    post p(postText,0,tm);
     user.stream.push_back(p);
   }
 
