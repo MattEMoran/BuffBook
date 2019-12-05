@@ -10,7 +10,7 @@ struct post{
   string title;
   int likes;
   string timestamp;
-  vector<string> comments;
+  stack<string> comments;
   post(string t, int l, string tm)
   {
     title = t;
@@ -66,7 +66,7 @@ class BuffBook{
 
   void removeFriend(string username){
     //Remove friend from current user's friend list
-    for (int i = 0; i < users.size(); i++){
+    /*for (int i = 0; i < users.size(); i++){
       if (users[i].username == curruser.username){
         for (int j = 0; j < users[i].friends.size(); j++){
           if(users[i].friends.username == username){
@@ -75,7 +75,7 @@ class BuffBook{
           }
         }
       }
-    }
+    }*/
   }
 
   void writePost(){
@@ -99,18 +99,27 @@ class BuffBook{
     cout<<endl;*/
   }
 
-  void commentOnPost(){
+  void commentOnPost(post *p){
     //Adds comment to post
+    /*cin.clear();
+    cin.ignore();
+    string comment;
+    cout<<"Write your comment here: "<<endl;
+    cin>>comment;
+    p.comments.push(comment);*/
   }
 
-  void likePost(){
+  void likePost(post *p){
     //Increase likes on particular post
+    //p.likes++;
   }
 
   //Utility Functions that can be used only by admin//
 
   void shutDown(){
     //Save new information to file
+    /*cout<<"Shutting Down."<<endl;
+    exit(1);*/
   }
 
   void listNetwork(){
@@ -131,6 +140,34 @@ class BuffBook{
 
   void login{
     //Enter a valid username and password
+    /*string user;
+    string pass;
+    cin.clear();
+    cin.ignore();
+    bool check = false;
+    int ind = -1;
+    while(check == false){
+      cout<<"Enter a valid username: "<<endl;
+      cin>>user;
+      for(int i = 0;i < users.size();i++){
+        if(users[i].username == user){
+          check = true;
+          ind = i;
+        }
+      }
+      cin.clear();
+    }
+    check = false;
+    while(check==false){
+      cout<<"Enter a valid username: "<<endl;
+      cin>>user;
+      if(users[ind].password == pass){
+        check = true;
+      }
+      cin.clear();
+      cout<<"Welcome to Buff Book!"<<endl;
+    }*/
+    
   }
 }
 
