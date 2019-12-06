@@ -1,7 +1,3 @@
-Username|Password|Friend1,Friend2,Friend3,...|Post1~Post1Likes~Post1Timestamp~Comment1~Comment1Likes~Comment1Username~Comment1Timestamp~Comment2...|Post 2...
-
-A * symbol means that thing is empty, usually for friends list. 
-
 BuffBookOfficial|Sk0BuFfS|RalphieOfficial|Welcome to Buff Book!~34~00:00:00:00~*
 RalphieOfficial|r@lphieRun|BuffBookOfficial|Ralphie V has retired.~567~45:32:05:56~Have fun in retirement!~34~45:32:05:56
 Eugene19|ro3eN2V|RalphieOfficial,BuffBookOfficial,RigZay|*

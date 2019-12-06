@@ -26,6 +26,8 @@ struct post
   int likes;
   time_t timestamp;
   stack<Comment> comments;
+  post *earlier;
+  post *later;
   post(string t, int l, time_t tm)
   {
     title = t;
@@ -60,7 +62,7 @@ public:
   string password;
   vector<post> posts;
   vector<*User> friends;
-
+  post *root;
   User(string name, string password)
   {
     username = name;
@@ -69,9 +71,35 @@ public:
   
   void displayFeed()
   {
+    for(int i = 0; i < friends.size(); i++){
+      for(int j = 0; j < friends[i]->posts.size();j++){
+        if(root==NULL){
+          root = friends[i]->posts[j];
+          root->earlier=NULL;
+          root->later=NULL;
+        } else {
+          post *curr = root;
+          while(curr!=NULL){
+            if(difftime(friends[i]->posts[j].timestamp,curr) < 0){
+              curr = curr->later;
+            } else {
+              curr = curr->earlier;
+            }
+          }
+          curr = friends[i]->posts[j];
+        }
+      }
+    }
+    findTen(root);
     //BST for you to integrate Matt, i think you should make a BST sorted off timestamps
     //loop through all of the friends and add their posts to the BST in the correct order
     //then to inorder traversal after you went through all of the friends and post the things and info
+  }
+
+  void findTen(post *root){
+    for(int i = 0; i < 10; i++){
+      //...//
+    }
   }
 
   void addFriend(User newFriend)
@@ -167,8 +195,8 @@ public:
 
       if(input==1)
       {
-        refreshFeed();
-
+        displayFeed();
+        //...//
       }
 
       if(input==2)
@@ -178,11 +206,21 @@ public:
 
       if(input==3)
       {
-        addFriend(username);
+        cin.clear();
+        cin.ignore();
+        string user;
+        cout<<"Enter a valid username: "<<endl;
+        cin>>user;
+        addFriend(user);
       }
 
       if(input==4)
       {
+        cin.clear();
+        cin.ignore();
+        string user;
+        cout<<"Enter a valid username: "<<endl;
+        cin>>user;
         removeFriend(username)
       }
 
@@ -223,9 +261,10 @@ public:
     return users;
   }
 
-  void refreshFeed()
+  void displayFeed()
   {
-    //Display 10 most recent posts from all friends
+    curruser->refreshFeed();
+
   }
 
   void addFriend(string username2)
@@ -245,26 +284,25 @@ public:
   void removeFriend(string username)
   {
     //Remove friend from current user's friend list
-    /*for (int i = 0; i < users.size(); i++){
+    for (int i = 0; i < users.size(); i++){
       if (users[i].username == curruser.username){
         for (int j = 0; j < users[i].friends.size(); j++){
-          if(users[i].friends.username == username){
-            Friend temp;
-            temp = users[i].
+          if(users[j].friends.username == username){
+            curruser->addFriend(users[j]);
           }
         }
       }
-    }*/
+    }
   }
 
   void listFriends()
   {
     //List current user's friends
-    /*cout<<"Friends: ";
-    for(int i = 0; i < curruser.friends.size();i++){
-      cout<<curruser.friends[i].username<<" ";
+    cout<<"Friends: ";
+    for(int i = 0; i < curruser->friends.size();i++){
+      cout<<curruser->friends[i].username<<" ";
     }
-    cout<<endl;*/
+    cout<<endl;
   }
 
   void commentOnPost()
@@ -309,6 +347,7 @@ public:
   void generateNetwork(string filename)
   {
     //Generate network of users and posts
+    //...//
     login();
   }
 
