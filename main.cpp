@@ -3,15 +3,30 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <ctime>
 
 using namespace std;
 
-struct post{
+struct Comment
+{
+  string username;
+  string text;
+  time_t timestamp;
+  Comment(string text, string username, time_t timestamp)
+  {
+    this->text = text;
+    this->username = username;
+    this->timestamp = timestamp;
+  }
+};
+
+struct post
+{
   string title;
   int likes;
-  string timestamp;
-  stack<string> comments;
-  post(string t, int l, string tm)
+  time_t timestamp;
+  stack<Comment> comments;
+  post(string t, int l, time_t tm)
   {
     title = t;
     l = likes;
@@ -23,7 +38,7 @@ struct Friend
 {
   user *u;
 }
-
+/*
 class User
 {
  string username;
@@ -36,35 +51,199 @@ class User
  }
  
 };
+*/
 
-class BuffBook{
+class User
+{
+public:
+  string username;
+  string password;
+  vector<post> posts;
+  vector<*User> friends;
+
+  User(string name, string password)
+  {
+    username = name;
+    this->password = password;
+  }
+  
+  void displayFeed()
+  {
+    //BST for you to integrate Matt, i think you should make a BST sorted off timestamps
+    //loop through all of the friends and add their posts to the BST in the correct order
+    //then to inorder traversal after you went through all of the friends and post the things and info
+  }
+
+  void addFriend(User newFriend)
+  {
+    friends.push_back(&newFriend);
+  }
+
+  void removeFriend(string username)
+  {
+    for(int i = 0; i < friends.size(); i++)
+    {
+      if(friends[i].username == username)
+      {
+        friends.erase(friends.begin() + i);
+      }
+    }
+  }
+
+  void addPost(string text, int likes, time_t timestamp)
+  {
+    post p = new post(text, likes, timestamp);
+    posts.push_back(p);
+  }
+
+  void addPost(string text)
+  {
+    time_t timestamp;
+    timestamp = time(NULL);
+    addPost(text, 0, timestamp);
+  }
+
+  void displayFriendList()
+  {
+    cout<<"Friends:"<<endl;
+    for(int i = 0 ; i < friends.size(); i++)
+    {
+      cout<<friends[i]->username<<endl;
+    }
+  }
+
+  void commentOnPost(string text, post p, time_t timestamp)
+  {
+    Comment newComment = Comment(text, username, timestamp);
+    p.comments.push_back(newComment);
+  }
+
+  void commentOnPost(string text, post p)
+  {
+    time_t timestamp = time(NULL);
+    commentOnPost(text, p, timestamp);
+  }
+
+  void likePost(post p)
+  {
+    p.likes++;
+  }
+
+};
+
+
+
+
+class BuffBook
+{
   vector<User> users;
   User *curruser;
-  private:
-  BuffBook(string filename){
+
+public:
+
+  BuffBook(string filename)
+  {
     generateNetwork(filename);
   }
 
-  void refreshFeed(){
+  BuffBook(){}
+
+  void displayFeedMenu()
+    {
+      cout<<"Welcome to Buff Book!"<<endl;
+      cout<<"1. View your feed"<<endl;
+      cout<<"2. View your friends list"<<endl;
+      cout<<"3. Add a friend"<<endl;
+      cout<<"4. Remove a friend"<<endl;
+      cout<<"5. Write a post"<<endl;
+      cout<<"6. Log out"<<endl;
+      int input = 0;
+      while((input < 1) || (input > 6))
+      {
+        cin.clear();
+        cin.ignore();
+        cin<<input;
+      }
+
+      if(input==1)
+      {
+        refreshFeed();
+
+      }
+
+      if(input==2)
+      {
+        listFriends(curruser.username);
+      }
+
+      if(input==3)
+      {
+        addFriend(username);
+      }
+
+      if(input==4)
+      {
+        removeFriend(username)
+      }
+
+      if(input==5)
+      {
+        cin.clear();
+        cin.ignore();
+        string post;
+        cout<<"Write your post here: "<<endl;
+        cin>>post;
+        User::addPost(post);
+      }
+
+      if(input==6)
+      {
+        shutdown();
+      }
+
+    }
+
+  void addUser(string username, string password)
+  {
+    User newUser = User(username, password);
+    users.push_back(newUser);
+  }
+
+  void printUsers()
+  {
+    cout<<"Users:"<<endl;
+    for(int i = 0; i < users.size(); i++)
+    {
+      cout<<users[i].username<<" Password: "<<users[i].password<<endl;
+    }
+  }
+
+  vector<User> getUsers()
+  {
+    return users;
+  }
+
+  void refreshFeed()
+  {
     //Display 10 most recent posts from all friends
   }
 
-  void addFriend(string username){
+  void addFriend(string username2)
+  {
     //Add friend for current user
-    /*for (int i = 0; i < users.size(); i++){
+    for (int i = 0; i < users.size(); i++){
       if (users[i].username == curruser.username){
         for (int j = 0; j < users.size(); j++){
           if(users[j].username == username){
-            Friend temp;
-            temp.u = &users[j];
-            users[i].friends.push_back(temp);
+            curruser->addFriend(users[j]);
           }
         }
       }
-    }*/
+    }
   }
 
-  void removeFriend(string username){
+  void removeFriend(string username)
+  {
     //Remove friend from current user's friend list
     /*for (int i = 0; i < users.size(); i++){
       if (users[i].username == curruser.username){
@@ -78,19 +257,8 @@ class BuffBook{
     }*/
   }
 
-  void writePost(){
-    //Create post for current user
-    /*cin.clear();
-    cin.ignore();
-    string postText;
-    cout<<"Write your post here: ";
-    cin>>postText;
-    string tm = "";
-    post p(postText,0,tm);
-    curruser.stream.push(p);*/
-  }
-
-  void listFriends(){
+  void listFriends()
+  {
     //List current user's friends
     /*cout<<"Friends: ";
     for(int i = 0; i < curruser.friends.size();i++){
@@ -99,7 +267,8 @@ class BuffBook{
     cout<<endl;*/
   }
 
-  void commentOnPost(post *p){
+  void commentOnPost()
+  {
     //Adds comment to post
     /*cin.clear();
     cin.ignore();
@@ -109,20 +278,23 @@ class BuffBook{
     p.comments.push(comment);*/
   }
 
-  void likePost(post *p){
+  void likePost()
+  {
     //Increase likes on particular post
     //p.likes++;
   }
 
   //Utility Functions that can be used only by admin//
 
-  void shutDown(){
+  void shutdown()
+  {
     //Save new information to file
     /*cout<<"Shutting Down."<<endl;
     exit(1);*/
   }
 
-  void listNetwork(){
+  void listNetwork()
+  {
     //List all users and their friends
     /*for(int i = 0; i < users.size(); i++){
       cout<<"User: "<<users[i].username<<endl;
@@ -134,13 +306,16 @@ class BuffBook{
     }*/
   }
 
-  void generateNetwork(string filename){
+  void generateNetwork(string filename)
+  {
     //Generate network of users and posts
+    login();
   }
 
-  void login{
+  void login
+  {
     //Enter a valid username and password
-    /*string user;
+    string user;
     string pass;
     cin.clear();
     cin.ignore();
@@ -165,12 +340,12 @@ class BuffBook{
         check = true;
       }
       cin.clear();
-      cout<<"Welcome to Buff Book!"<<endl;
-    }*/
-    
+    }
+    displayFeedMenu();
   }
-}
+};
 
-int main() {
+int main()
+{
   BuffBook b(Database.txt);
 }
