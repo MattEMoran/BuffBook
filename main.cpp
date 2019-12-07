@@ -69,20 +69,29 @@ public:
     this->password = password;
   }
   
-  void displayFeed()
+  void refreshFeed()
   {
-    for(int i = 0; i < friends.size(); i++){
-      for(int j = 0; j < friends[i]->posts.size();j++){
-        if(root==NULL){
+    deleteFeed(root);
+    for(int i = 0; i < friends.size(); i++)
+    {
+      for(int j = 0; j < friends[i]->posts.size();j++)
+      {
+        if(root==NULL)
+        {
           root = friends[i]->posts[j];
           root->earlier=NULL;
           root->later=NULL;
-        } else {
+        } 
+        else 
+        {
           post *curr = root;
           while(curr!=NULL){
-            if(difftime(friends[i]->posts[j].timestamp,curr) < 0){
+            if(difftime(friends[i]->posts[j].timestamp,curr.timestamp) < 0)
+            {
               curr = curr->later;
-            } else {
+            } 
+            else 
+            {
               curr = curr->earlier;
             }
           }
@@ -90,16 +99,39 @@ public:
         }
       }
     }
-    findTen(root);
+    printPost(root);
     //BST for you to integrate Matt, i think you should make a BST sorted off timestamps
     //loop through all of the friends and add their posts to the BST in the correct order
     //then to inorder traversal after you went through all of the friends and post the things and info
   }
 
-  void findTen(post *root){
-    for(int i = 0; i < 10; i++){
-      //...//
+  void printPost(post *node)
+  {
+    if(node==NULL){
+      return;
     }
+    printPost(node->later);
+    cout<<node->title<<endl;
+    cout<<"Likes: "<<node->likes<<endl;
+    cout<<"Posted: "<<node->timestamp<<endl;
+    //Comments need to be printed//
+    printPost(node->earlier);
+  }
+
+  post* latestPost(post *node)
+  {
+    while(node->left != NULL){
+      node = node->left;
+    }
+    return node;
+  }
+
+  void deleteFeed(post *node){
+    if(node==NULL){
+      return;
+    }
+    deleteFeed(node->left);
+    deleteFeed(node->right);
   }
 
   void addFriend(User newFriend)
@@ -264,7 +296,6 @@ public:
   void displayFeed()
   {
     curruser->refreshFeed();
-
   }
 
   void addFriend(string username2)
