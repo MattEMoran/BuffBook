@@ -7,6 +7,8 @@
 
 using namespace std;
 
+//struct Friend;
+
 struct Comment
 {
   string username;
@@ -22,7 +24,7 @@ struct Comment
 
 struct post
 {
-  string title;
+  string text;
   int likes;
   time_t timestamp;
   stack<Comment> comments;
@@ -30,30 +32,11 @@ struct post
   post *later;
   post(string t, int l, time_t tm)
   {
-    title = t;
+    text = t;
     l = likes;
     timestamp = tm;
   }
 };
-
-struct Friend
-{
-  user *u;
-}
-/*
-class User
-{
- string username;
- string password;
- stack <post> stream;
- vector <Friend> friends;
- User(string name, string password){
-   username = name;
-   password = password;
- }
- 
-};
-*/
 
 class User
 {
@@ -61,7 +44,8 @@ public:
   string username;
   string password;
   vector<post> posts;
-  vector<*User> friends;
+  vector<User*> friends;
+  vector<post*> feed;
   post *root;
   User(string name, string password)
   {
@@ -71,14 +55,13 @@ public:
   
   void refreshFeed()
   {
-    deleteFeed(root);
     for(int i = 0; i < friends.size(); i++)
     {
       for(int j = 0; j < friends[i]->posts.size();j++)
       {
         if(root==NULL)
         {
-          root = friends[i]->posts[j];
+          root = &friends[i]->posts[j];
           root->earlier=NULL;
           root->later=NULL;
         } 
@@ -86,64 +69,81 @@ public:
         {
           post *curr = root;
           while(curr!=NULL){
-            if(difftime(friends[i]->posts[j].timestamp,curr.timestamp) < 0)
+            if(friends[i]->posts[j].timestamp > curr->timestamp)
             {
               curr = curr->later;
             } 
-            else 
+            else if (friends[i]->posts[j].timestamp < curr->timestamp)
             {
               curr = curr->earlier;
             }
+            else
+            {
+              curr = curr->later;
+            }
           }
-          curr = friends[i]->posts[j];
+          curr = &friends[i]->posts[j];
         }
       }
-    }
-    printPost(root);
-    //BST for you to integrate Matt, i think you should make a BST sorted off timestamps
-    //loop through all of the friends and add their posts to the BST in the correct order
-    //then to inorder traversal after you went through all of the friends and post the things and info
+    }  
+    traverse(root);
   }
 
-  void printPost(post *node)
-  {
+  void traverse(post *node){
     if(node==NULL){
       return;
     }
-    printPost(node->later);
-    cout<<node->title<<endl;
-    cout<<"Likes: "<<node->likes<<endl;
-    cout<<"Posted: "<<node->timestamp<<endl;
-    //Comments need to be printed//
-    printPost(node->earlier);
+    traverse(node->earlier);
+    feed.push_back(node);
+    traverse(node->later);
   }
-
-  post* latestPost(post *node)
-  {
-    while(node->left != NULL){
-      node = node->left;
-    }
-    return node;
+  
+  void addToFeed(post p){
+    if(root==NULL)
+        {
+          root = &p;
+          root->earlier=NULL;
+          root->later=NULL;
+        } 
+        else 
+        {
+          post *curr = root;
+          while(curr!=NULL){
+            if(p.timestamp > curr->timestamp)
+            {
+              curr = curr->later;
+            } 
+            else if (p.timestamp < curr->timestamp)
+            {
+              curr = curr->earlier;
+            }
+            else
+            {
+              curr = curr->later;
+            }
+          }
+          curr = &p;
+        }
   }
 
   void deleteFeed(post *node){
     if(node==NULL){
       return;
     }
-    deleteFeed(node->left);
-    deleteFeed(node->right);
+    deleteFeed(node->earlier);
+    deleteFeed(node->later);
   }
-
-  void addFriend(User newFriend)
+  
+  void addFriend(User u)
   {
-    friends.push_back(&newFriend);
+    friends.push_back(&u);
   }
 
   void removeFriend(string username)
   {
     for(int i = 0; i < friends.size(); i++)
     {
-      if(friends[i].username == username)
+      if(friends[i]->username == username)
       {
         friends.erase(friends.begin() + i);
       }
@@ -152,8 +152,9 @@ public:
 
   void addPost(string text, int likes, time_t timestamp)
   {
-    post p = new post(text, likes, timestamp);
+    post p = post(text, likes, timestamp);
     posts.push_back(p);
+    addToFeed(p);
   }
 
   void addPost(string text)
@@ -163,19 +164,10 @@ public:
     addPost(text, 0, timestamp);
   }
 
-  void displayFriendList()
-  {
-    cout<<"Friends:"<<endl;
-    for(int i = 0 ; i < friends.size(); i++)
-    {
-      cout<<friends[i]->username<<endl;
-    }
-  }
-
   void commentOnPost(string text, post p, time_t timestamp)
   {
-    Comment newComment = Comment(text, username, timestamp);
-    p.comments.push_back(newComment);
+    Comment newComment(text, username, timestamp);
+    p.comments.push(newComment);
   }
 
   void commentOnPost(string text, post p)
@@ -189,6 +181,31 @@ public:
     p.likes++;
   }
 
+  void displayFriendList()
+  {
+    cout<<"Friends:"<<endl;
+    for(int i = 0 ; i < friends.size(); i++)
+    {
+      cout<<friends[i]->username<<endl; 
+    }
+  }
+
+  void printAllPosts()
+  {
+    cout<<"All Post From "<<username<<endl;
+    for(int i = 0; i < posts.size(); i++)
+    {
+      cout<<posts[i].text<<endl<<"timestamp: ";
+      printTimeIntoWords(posts[i].timestamp);
+      cout<<endl<<endl;
+    }
+  }
+
+  void printTimeIntoWords(time_t rawTime)
+  {
+    char *timeString = ctime(&rawTime);
+    cout<<timeString<<endl;
+  }
 };
 
 
@@ -196,10 +213,10 @@ public:
 
 class BuffBook
 {
+public:
+
   vector<User> users;
   User *curruser;
-
-public:
 
   BuffBook(string filename)
   {
@@ -210,7 +227,6 @@ public:
 
   void displayFeedMenu()
     {
-      cout<<"Welcome to Buff Book!"<<endl;
       cout<<"1. View your feed"<<endl;
       cout<<"2. View your friends list"<<endl;
       cout<<"3. Add a friend"<<endl;
@@ -222,56 +238,57 @@ public:
       {
         cin.clear();
         cin.ignore();
-        cin<<input;
+        cin>>input;
       }
-
-      if(input==1)
+      if(input == 1)
       {
         displayFeed();
-        //...//
+        for(int i = 0; i < 10; i++){
+          printPost(curruser->feed.at(i));
+        }
       }
 
-      if(input==2)
+      if(input == 2)
       {
-        listFriends(curruser.username);
-      }
+        addFriend("Mattie");
+        listFriends();
+      } 
 
-      if(input==3)
+      if(input == 3)
       {
         cin.clear();
         cin.ignore();
         string user;
-        cout<<"Enter a valid username: "<<endl;
+        cout<<"Enter a valid username: ";
         cin>>user;
         addFriend(user);
       }
 
-      if(input==4)
+      if(input == 4)
       {
         cin.clear();
         cin.ignore();
-        string user;
-        cout<<"Enter a valid username: "<<endl;
-        cin>>user;
-        removeFriend(username)
+        string username;
+        cout<<"Enter a valid username: ";
+        cin>>username;
+        removeFriend(username);
       }
 
-      if(input==5)
+      if(input == 5)
       {
         cin.clear();
         cin.ignore();
         string post;
-        cout<<"Write your post here: "<<endl;
+        cout<<"Write your post here: ";
         cin>>post;
-        User::addPost(post);
+        curruser->addPost(post);
       }
 
-      if(input==6)
+      if(input == 6)
       {
         shutdown();
       }
-
-    }
+    };
 
   void addUser(string username, string password)
   {
@@ -284,28 +301,49 @@ public:
     cout<<"Users:"<<endl;
     for(int i = 0; i < users.size(); i++)
     {
-      cout<<users[i].username<<" Password: "<<users[i].password<<endl;
+      cout<<users[i].username<<endl;
     }
   }
 
-  vector<User> getUsers()
+  void printPost(post *p)
   {
-    return users;
+    cout<<p->text<<endl;
+    cout<<"Likes: "<<p->likes<<endl;
+    cout<<p->timestamp<<endl;
+    for(int i = 0; i < p->comments.size();i++)
+    {
+      //cout<<"@"<<p->comments.at(i).username<<p->comments.at(i).text<<endl;
+    }
+  }
+
+  int getUserIndexByUsername(string username)
+  {
+    for(int i = 0; i < users.size(); i++)
+    {
+      if(users[i].username == username)
+      {
+        return i;
+      }
+    }
+    return -1;
   }
 
   void displayFeed()
   {
     curruser->refreshFeed();
   }
-
+  
   void addFriend(string username2)
   {
     //Add friend for current user
     for (int i = 0; i < users.size(); i++){
-      if (users[i].username == curruser.username){
+      if (users[i].username == curruser->username){
         for (int j = 0; j < users.size(); j++){
-          if(users[j].username == username){
+          if(users[j].username == username2){     
             curruser->addFriend(users[j]);
+            for(int k = 0; k < users[j].posts.size();k++){
+              curruser->addToFeed(users[j].posts[k]);
+            }
           }
         }
       }
@@ -316,10 +354,10 @@ public:
   {
     //Remove friend from current user's friend list
     for (int i = 0; i < users.size(); i++){
-      if (users[i].username == curruser.username){
+      if (users[i].username == curruser->username){
         for (int j = 0; j < users[i].friends.size(); j++){
-          if(users[j].friends.username == username){
-            curruser->addFriend(users[j]);
+          if(users[j].username == username){
+            curruser->removeFriend(users[j].username);
           }
         }
       }
@@ -328,71 +366,54 @@ public:
 
   void listFriends()
   {
-    //List current user's friends
-    cout<<"Friends: ";
-    for(int i = 0; i < curruser->friends.size();i++){
-      cout<<curruser->friends[i].username<<" ";
-    }
-    cout<<endl;
+     curruser->displayFriendList();
   }
 
-  void commentOnPost()
-  {
-    //Adds comment to post
-    /*cin.clear();
-    cin.ignore();
-    string comment;
-    cout<<"Write your comment here: "<<endl;
-    cin>>comment;
-    p.comments.push(comment);*/
-  }
+  
 
-  void likePost()
+  void shutdown()
   {
-    //Increase likes on particular post
-    //p.likes++;
+    //Close program
+    cout<<"Shutting Down."<<endl;
+    exit(1);
   }
 
   //Utility Functions that can be used only by admin//
 
-  void shutdown()
-  {
-    //Save new information to file
-    /*cout<<"Shutting Down."<<endl;
-    exit(1);*/
-  }
-
   void listNetwork()
   {
     //List all users and their friends
-    /*for(int i = 0; i < users.size(); i++){
+    for(int i = 0; i < users.size(); i++){
       cout<<"User: "<<users[i].username<<endl;
       cout<<"   Friends: ";
-      for(int j = 0; j < users[i].friends.size; j++){
-        cout<<users[i].friends[j].username<<" ";
+      for(int j = 0; j < users[i].friends.size(); j++){
+        cout<<users[i].friends[j]->username<<" ";
       }
       cout<<endl;
-    }*/
+    }
   }
 
   void generateNetwork(string filename)
   {
     //Generate network of users and posts
     //...//
-    login();
   }
 
-  void login
+  void vectorize(post *node)
+  {
+    
+  }
+  
+  void login()
   {
     //Enter a valid username and password
     string user;
     string pass;
-    cin.clear();
-    cin.ignore();
     bool check = false;
     int ind = -1;
-    while(check == false){
-      cout<<"Enter a valid username: "<<endl;
+    while(check == false)
+    {
+      cout<<"Enter a valid username: ";
       cin>>user;
       for(int i = 0;i < users.size();i++){
         if(users[i].username == user){
@@ -404,18 +425,47 @@ public:
     }
     check = false;
     while(check==false){
-      cout<<"Enter a valid username: "<<endl;
-      cin>>user;
+      cout<<"Enter a valid password: ";
+      cin>>pass;
       if(users[ind].password == pass){
         check = true;
       }
       cin.clear();
     }
-    displayFeedMenu();
+    curruser = &users[ind];
+    cout<<"Welcome to Buff Book!"<<endl;
+    while(true)
+    {
+      displayFeedMenu();
+    }
+  }
+
+  void printTimeIntoWords(time_t rawTime)
+  {
+    char *timeString = ctime(&rawTime);
+    cout<<timeString<<endl;
   }
 };
 
-int main()
+/*struct Friend
 {
-  BuffBook b(Database.txt);
-}
+  User *u;
+};*/
+
+int main()
+{ 
+  BuffBook b("Database.txt");
+  b.addUser("Mattie", "BigMoney");
+  b.addUser("Mikey", "SmallMoney9");
+  b.addUser("PhatBoi", "SmallPeen");
+  b.users[1].addFriend(b.users[0]);
+  b.users[0].addFriend(b.users[1]);
+  b.users[2].addFriend(b.users[1]);
+  b.users[2].addFriend(b.users[0]);
+  b.users[2].removeFriend("Mikey");
+  b.users[1].addPost("Howdy yall!", 2, 1000000000);
+  b.users[1].addPost("Whats Up Pimps And Players");
+  b.users[1].printAllPosts();
+  b.printUsers();
+  b.login();
+};
