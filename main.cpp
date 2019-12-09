@@ -281,9 +281,9 @@ public:
   vector<User> users;
   User *curruser;
 
-  BuffBook(string filename)
-  {
-    generateNetwork(filename); //call to the generateNetwork using a passed filename string
+  BuffBook(string filename){
+      readfile(filename);
+      login();
   }
 
   BuffBook(){} //Used for when no filename is passed
@@ -496,6 +496,7 @@ public:
   {
     //Close program
     cout<<"Shutting Down."<<endl;
+    writeToFile("Database.txt");
     curruser->deleteFeed(curruser->root);
     exit(1);
   }
@@ -512,12 +513,6 @@ public:
       }
       cout<<endl;
     }
-  }
-
-  void generateNetwork(string filename)
-  {
-    //Generate network of users and posts
-    //...//
   }
   
   //The login function prompts the user to input a valid username and password. If the username and password are validated, the current user pointer is set, the BST of posts for the user is created and the displayFeedMenu function is called.
@@ -667,7 +662,6 @@ public:
         }
         outputfile<<users[i].friends[j]->username;
       }
-      cout<<users.at(i).posts.size()<<endl;
       for(int j = 0; j < users.at(i).posts.size(); j++)
       {
         outputfile<<"|"<<users[i].posts[j].text;
@@ -688,22 +682,6 @@ public:
 
 int main()
 { 
-  BuffBook b = BuffBook();
-  /*
-  b.addUser("admin","1234");
-  b.addUser("Mattie", "BigMoney");
-  b.addUser("Mikey", "SmallMoney9");
-  b.addUser("A", "A");
-  b.users.at(1).addPost("Test post 2", 1, 1000000000);
-  b.users.at(2).addPost("Test post 3", 1, 1000000000);
-  b.users.at(2).addPost("Test post 4", 2, 10000000);
-  */
-  b.readfile("Database.txt");
-  b.users[0].displayFriendList();
-  //b.users.at(3).addFriend(&b.users.at(2));
-  //b.users[2].addFriend(b.users[0]);
-  //b.users[2].printAllPosts();
-  //b.printPost(b.users[2].posts[0]);
-  //b.printUsers();
-  b.login();
+  BuffBook b = BuffBook("Database.txt");
+  //b.users[0].displayFriendList();
 };
