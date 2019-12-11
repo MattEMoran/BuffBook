@@ -21,7 +21,7 @@ struct Comment
   }
 };
 
-//The post struct contains the text of the post, the number of likes it has, and an appropriate timestamp. It also has a vector containing comments on the post as well as pointers used for the BST of posts.
+//The post struct contains the text of the post, the username of the poster, the number of likes it has, and an appropriate timestamp. It also has a vector containing comments on the post as well as pointers used for the BST of posts.
 struct post
 {
   string username;
@@ -71,10 +71,11 @@ public:
         friends[i]->posts[j].likes, 
         friends[i]->posts[j].timestamp,
         friends[i]->posts[j].username);
-        for(int i = 0; i < friends[i]->posts[j].comments.size();i++){
-          newP->comments.at(i) = friends[i]->posts[j].comments.at(i);
+        for(int k = 0; k < friends[i]->posts[j].comments.size();k++)
+        {
+          newP->comments.push_back(friends[i]->posts[j].comments.at(k));
         }
-          
+        //newP contains the same information as the original posts. 
         if(root==NULL)
         {
           root = newP;
@@ -100,35 +101,41 @@ public:
             curr = curr->earlier;
           }
         }
-          if(parr->timestamp > friends[i]->posts[j].timestamp){
+          if(parr->timestamp > friends[i]->posts[j].timestamp)
+          {
             parr->later = newP;
             parr->earlier = NULL;
-          } else {
+          } 
+          else
+          {
             parr->earlier = newP;
             parr->later = NULL;
           }
         }
       }
-    } 
-    traverse(root);
+    }
+    traverse(root); //A call to the traverse function is used to build the posts vector.
   }
 
   //The traverse function takes in a pointer to a post as input.
   //The function recursively traverses through the BST of posts and adds them to the current user's feed, contained in a vector. 
-  void traverse(post *node){ 
-    if(node==NULL){
+  void traverse(post *node)
+  { 
+    if(node==NULL)
+    {
       return;
     }
-      traverse(node->earlier);
-      feed.push_back(node);
-      traverse(node->later);     
+    traverse(node->earlier);
+    feed.push_back(node);
+    traverse(node->later);     
   }
   
   //The addToFeed function takes in a post as input.
   //The function performs the same insertion algorithm as the refreshFeed function where earlier and later pointers are used to traverse the already built tree. The function compares the timestamps of the to-be-inserted post and the current post.
   void addToFeed(post p){
     post *newP = new post(p.text, p.likes, p.timestamp,p.username);
-      for(int i = 0; i < p.comments.size();i++){
+      for(int i = 0; i < p.comments.size();i++)
+      {
         newP->comments.at(i) = p.comments.at(i);
       }
         
@@ -142,7 +149,8 @@ public:
       {
       post *curr = root;
       post *parr = NULL;
-      while(curr!=NULL){
+      while(curr!=NULL)
+      {
         parr = curr;
         if(newP->timestamp < curr->timestamp)
         {
@@ -157,10 +165,13 @@ public:
           curr = curr->earlier;
         }
       }
-        if(parr->timestamp > newP->timestamp){
+        if(parr->timestamp > newP->timestamp)
+        {
           parr->later = newP;
           parr->earlier = NULL;
-        } else {
+        } 
+        else 
+        {
           parr->earlier = newP;
           parr->later = NULL;
         }
@@ -169,8 +180,10 @@ public:
 
   //The deletedFeed function takes in a pointer to a post as input.
   //The function recursively traverses the tree and deletes each node.
-  void deleteFeed(post *node){
-    if(node==NULL){
+  void deleteFeed(post *node)
+  {
+    if(node==NULL)
+    {
       return;
     }
     deleteFeed(node->earlier);
@@ -235,7 +248,7 @@ public:
     commentOnPost(text, p, timestamp);
   }
 
-  //The likePost function takes in a post p as input and increases the likes of that post by one.
+  //The likePost function takes in a pointer to a post p as input and increases the likes of that post by one.
   void likePost(post * p)
   {
     p->likes++;
@@ -255,9 +268,12 @@ public:
   void printAllPosts()
   {
     cout<<"All Posts From: "<<username<<endl;
+    cout<<endl;
     for(int i = 0; i < posts.size(); i++)
     {
-      cout<<posts[i].text<<endl<<"Posted: ";
+      cout<<posts[i].text<<endl;
+      cout<<posts[i].likes<<" likes"<<endl;
+      cout<<"Posted: ";
       printTimeIntoWords(posts[i].timestamp);
       cout<<endl;
     }
@@ -277,13 +293,12 @@ public:
 class BuffBook
 {
 public:
-
   vector<User> users;
   User *curruser;
 
-  BuffBook(string filename){
-      readfile(filename);
-      login();
+  BuffBook(string filename)
+  {
+    readfile(filename);      
   }
 
   BuffBook(){} //Used for when no filename is passed
@@ -308,7 +323,8 @@ public:
     if(input == 1)
     {
       system("clear");
-      for(int i = 0; i < curruser->feed.size(); i++){
+      for(int i = 0; i < curruser->feed.size(); i++)
+      {
         cout<<"Post "<<(i+1)<<endl;
         cout<<endl;
         printPost(*curruser->feed[i]); //Calls the printPost function for the ten most recent posts.
@@ -372,22 +388,26 @@ public:
 
   //The postMenu function is called when the user selects the "View feed" option from the feedMenu function.
   //The function displays a short list of functions used while navigating the user's feed.
-  void postMenu(){
+  void postMenu()
+  {
     cout<<"1. Go Back"<<endl;
     cout<<"2. Like a post"<<endl;
-    cout<<"3. Shutdown"<<endl;
+    cout<<"3. Comment on a post"<<endl;
+    cout<<"4. Logout"<<endl;
     int input = 0;
-    while((input < 1) || (input > 3))
+    while((input < 1) || (input > 4))
     {
       cin.clear();
       cin.ignore();
       cin>>input;
     }
-    if(input==1){
+    if(input==1)
+    {
       system("clear");
       displayFeedMenu();
     }
-    if(input==2){
+    if(input==2)
+    {
       int post = 0;    
       while((post - 1 < 0) || (post - 1 > curruser->feed.size())){
         cout<<"Which post are you liking?"<<endl;
@@ -395,14 +415,40 @@ public:
       }
       curruser->likePost(curruser->feed.at(post - 1));
       system("clear");
-      for(int i = 0; i < curruser->feed.size(); i++){
-        cout<<"Post "<<(i+1)<<": "<<endl;
-        printPost(*curruser->feed[i]); //Calls the printPost function for the ten most recent posts.
+      for(int i = 0; i < curruser->feed.size(); i++)
+      {
+        cout<<"Post "<<(i+1)<<endl;
+        cout<<endl;
+        printPost(*curruser->feed[i]); //Calls the printPost function for recent posts.
         cout<<endl;
       }
       postMenu();
     }
-    if(input==3){
+    if(input==3)
+    {
+        int post = 0;    
+        while((post - 1 < 0) || (post - 1 > curruser->feed.size())){
+          cout<<"Which post are you liking?"<<endl;
+          cin>>post;
+        }
+        cin.clear();
+        string text = "";
+        cout<<"Write your comment here: "<<endl;
+        cin>>text;
+        curruser->commentOnPost(text,curruser->feed.at(post-1));
+        system("clear");
+        for(int i = 0; i < curruser->feed.size(); i++)
+        {
+          cout<<"Post "<<(i+1)<<endl;
+          cout<<endl;
+          printPost(*curruser->feed[i]); //Calls the printPost function for recent posts.
+          cout<<endl;
+        }
+      postMenu();
+    }
+
+    if(input==4)
+    {
       system("clear");
       shutdown();
     }
@@ -439,6 +485,7 @@ public:
     {
       printTimeIntoWords(p.comments.at(i).timestamp);
       cout<<"     @"<<p.comments.at(i).username<<"   "<<p.comments.at(i).text<<endl;
+      cout<<endl;
     }
   }
 
@@ -458,7 +505,7 @@ public:
   }
   
   //The addFriend function takes in a string "username" as input.
-  //The function traverses the users vector until it finds the to-be-added friend. It then calls the addFriend function of the current user as well as the addToFeed function of the current user to add the user and their posts, respectively.
+  //The function traverses the users vector until it finds the to-be-added friend. It then calls the addFriend function of the current user as well as the refreshFeed function of the current user to add the user and their posts, respectively.
   void addFriend(string username2)
   {
     bool x = false;
@@ -468,7 +515,8 @@ public:
       {     
         curruser->addFriend(&users[j]);
         x = true;
-        if(users[j].posts.size()!=0){
+        if(users[j].posts.size()!=0)
+        {
             curruser->refreshFeed();
         }
         
@@ -527,8 +575,10 @@ public:
     {
       cout<<"Enter a valid username: ";
       cin>>user;
-      for(int i = 0;i < users.size();i++){
-        if(users[i].username == user){
+      for(int i = 0;i < users.size();i++)
+      {
+        if(users[i].username == user)
+        {
           check = true;
           ind = i;
         }
@@ -536,10 +586,12 @@ public:
       cin.clear();
     }
     check = false;
-    while(check==false){
+    while(check==false)
+    {
       cout<<"Enter a valid password: ";
       cin>>pass;
-      if(users[ind].password == pass){
+      if(users[ind].password == pass)
+      {
         check = true;
       }
       cin.clear();
@@ -562,6 +614,9 @@ public:
 
   //FileFormat
   //Username|Password|Friend1,Friend2|P1Text~Likes~Timestamp~C1~Timestamp~Username~C2...|P2...
+
+  //The readfile function takes in a string "filename" as input.
+  //The function then takes all the information from the file and creates a directed graph of users and their posts.
   void readfile(string filename)
   {
     ifstream filestream;
@@ -646,6 +701,8 @@ public:
     filestream2.close();
   }
 
+  //The writeToFile function takes in a string "filename" as input.
+  //The function takes the information currently within the graph and rewrites the database file to reflect any changes.
   void writeToFile(string filename)
   {
     ofstream outputfile;
@@ -683,5 +740,5 @@ public:
 int main()
 { 
   BuffBook b = BuffBook("Database.txt");
-  //b.users[0].displayFriendList();
+  b.login();
 };
